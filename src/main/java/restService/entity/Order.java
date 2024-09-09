@@ -2,28 +2,23 @@ package restService.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Objects;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    String description;
+    private int id;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @ManyToMany
     @JoinTable(
@@ -31,5 +26,70 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    List<Product> products;
+    private List<Product> products;
+
+    public Order(int id, String description, User user, List<Product> products) {
+        this.id = id;
+        this.description = description;
+        this.user = user;
+        this.products = products;
+    }
+
+    public Order() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", user=" + user +
+                ", products=" + products +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id == order.id && Objects.equals(description, order.description) && Objects.equals(user, order.user) && Objects.equals(products, order.products);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, user, products);
+    }
 }
